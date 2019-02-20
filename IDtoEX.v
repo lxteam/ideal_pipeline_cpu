@@ -1,4 +1,5 @@
 //流水信息传递
+`timescale 1ns / 1ps
 module IDtoEX_reg(
     //通用
     input In, input clk, input CLR, output reg Out,
@@ -23,7 +24,7 @@ module IDtoEX_reg(
             RD1 <= RD1_in;
             RD2 <= RD2_in;
             WbRegNum <= WbRegNum_in;
-            Extended_Imm <= Extended_Imm;
+            Extended_Imm <= Extended_Imm_in;
             shamt <= shamt_in;
             HI <= HI_in;
             LO <= LO_in;
@@ -48,7 +49,7 @@ module IDtoEX_signal(
     input Byte_in, output reg Byte,
     input Half_in, output reg Half,
     //EX
-    input ALU_OP_in, output reg ALU_OP,
+    input [3:0] ALU_OP_in, output reg [3:0] ALU_OP,
     input ALU_SRC_in, output reg ALU_SRC,
     input B_in, output reg B,
     input EQ_in, output reg EQ,

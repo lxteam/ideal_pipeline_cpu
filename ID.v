@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module ID(
     input [31:0] IR,
     input clk,
@@ -21,7 +22,7 @@ module ID(
     output [4:0] shamt,
     output reg [31:0] HI,
     output reg [31:0] LO,
-    output [31:0] jaladdr
+    output [31:0] jaddr
 );
     wire [5:0] OP = IR[31:26];
     wire [5:0] Func = IR[5:0];
@@ -47,7 +48,7 @@ module ID(
         else
             Extended_Imm = $signed(Imm);
     end
-    REGFILE reg1((JAL ? jaladdr : WbData), clk, JAL|RegWrite,WbRegNum_in, R1Num, R2Num, JAL, RD1, RD2);
+    REGFILE reg1((JAL ? jaddr : WbData), clk, JAL|RegWrite,WbRegNum_in, R1Num, R2Num, JAL, RD1, RD2);
     
 
 endmodule // 

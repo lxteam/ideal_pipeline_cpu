@@ -1,4 +1,5 @@
 //流水信息传递
+`timescale 1ns / 1ps
 module EXtoMEM_reg(
     //通用
     input In, input clk, input CLR, output reg Out,
@@ -14,7 +15,7 @@ module EXtoMEM_reg(
 );
     always @(posedge clk) begin
         if (CLR)
-            {Out,IR,PC} <= 0;
+            {Out,IR,PC,R1,R2,RD2,WbRegNum} <= 0;
         else begin
             Out <= In;
             IR <= IR_in;

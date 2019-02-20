@@ -1,4 +1,5 @@
 //流水信息传递
+`timescale 1ns / 1ps
 module IFtoID(
     //通用
     input clk, input CLR, output reg Out,
@@ -7,7 +8,7 @@ module IFtoID(
     //特化
 );
     always @(posedge clk) begin
-        if (CLR)
+        if (CLR) 
             {Out,IR,PC} <= 0;
         else begin
             Out <= 1;

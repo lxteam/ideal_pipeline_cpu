@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 //流水信息传递
 module MEMtoWB_reg(
     //通用
@@ -10,8 +11,12 @@ module MEMtoWB_reg(
     input [4:0] WbRegNum_in, output reg [4:0] WbRegNum    
 );
     always @(posedge clk) begin
-        if (CLR)
+        if (CLR)begin
             {Out,IR,PC} <= 0;
+            R1 <= 0;
+            R2 <= 0;
+            WbRegNum <= 0;
+        end
         else begin
             Out <= In;
             IR <= IR_in;
@@ -34,7 +39,7 @@ module MEMtoWB_signal(
 );
     always @(posedge clk) begin
         if (CLR)
-            {Out} <= 0;
+            {Out,RegWrite,LOWrite,HIWrite} <= 0;
         else begin
             Out <= In;
             RegWrite <= RegWrite_in;

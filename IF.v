@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module IF(
     input [31:0] jaddr,
     input [31:0] baddr,
@@ -9,14 +10,19 @@ module IF(
     output reg [31:0] PC
 );
     parameter width = 5;
-
-    reg [7:0] rom[2**width-1:0];
-    assign IR = {rom[PC+3],rom[PC+2],rom[PC+1],rom[PC]};
+    integer i;
+    reg [31:0] rom[2**width-1:0];
+    initial begin
+        for (i = 0; i<2**width-1; i = i+1)
+            rom[i] = 0;
+        $readmemh("/home/wc/w/ideal_test.hex",rom);
+    end
+    assign IR = rom[PC];
     always @(posedge clk) begin
         if (CLR)
             PC <= 0;
         else
-            PC <= PC+4;
+            PC <= PC+1;
     end
 
 
