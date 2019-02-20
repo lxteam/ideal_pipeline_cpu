@@ -13,7 +13,7 @@ module IF(
     integer i;
     reg [31:0] rom[2**width-1:0];
     initial begin
-        for (i = 0; i<2**width-1; i = i+1)
+        for (i = 0; i<2**width; i = i+1)
             rom[i] = 0;
         $readmemh("/home/wc/w/ideal_test.hex",rom);
     end

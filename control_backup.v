@@ -100,7 +100,7 @@ module control_unit(
         // instruction type
         wire R = (opt == R_OPT);
         wire SP = (opt == SP_OPT);
-        parameter ADDI_OPT = 6'b101011;
+        parameter ADDI_OPT = 6'b001000;
         parameter ADDIU_OPT = 6'b001001;
         parameter SLTI_OPT = 6'b001010;
         parameter SLTIU_OPT = 6'b001011;

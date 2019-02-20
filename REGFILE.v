@@ -13,7 +13,7 @@ module REGFILE(
 	output [31:0]A, 
 	output [31:0]B
 );
-	reg [31:0] mem[0:31];
+	reg [31:0] mem[31:0];
 	integer i;
 	initial begin
 		for(i=0;i<32;i=i+1)
@@ -22,7 +22,7 @@ module REGFILE(
 	
 	always @ (posedge clk) begin
 		if(RegWrite | JAL)
-			mem[WbRegNum] = WbData;
+			mem[WbRegNum] <= WbData;
 	end
 	assign A=mem[R1Num];
     assign B=mem[R2Num];
