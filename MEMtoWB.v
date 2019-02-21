@@ -2,7 +2,7 @@
 //流水信息传递
 module MEMtoWB_reg(
     //通用
-    input In, input clk, input CLR, output reg Out,
+    input In, input clk,input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
     //特化
@@ -17,7 +17,7 @@ module MEMtoWB_reg(
             R2 <= 0;
             WbRegNum <= 0;
         end
-        else begin
+        else if (EN) begin
             Out <= In;
             IR <= IR_in;
             PC <= PC_in;
@@ -30,7 +30,7 @@ endmodule
 //流水信号传递
 module MEMtoWB_signal(
     //通用
-    input In, input clk, input CLR, output reg Out,
+    input In, input clk,input EN, input CLR, output reg Out,
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -40,7 +40,7 @@ module MEMtoWB_signal(
     always @(posedge clk) begin
         if (CLR)
             {Out,RegWrite,LOWrite,HIWrite} <= 0;
-        else begin
+        else if (EN) begin
             Out <= In;
             RegWrite <= RegWrite_in;
             LOWrite <= LOWrite_in;
