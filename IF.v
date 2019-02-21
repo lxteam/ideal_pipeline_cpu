@@ -4,6 +4,7 @@ module IF(
     input [31:0] baddr,
     input JAL,input J, input JR, input Branch,
     input clk,
+    input PC_EN,
     input CLR,
 
     output [31:0] IR,
@@ -21,7 +22,7 @@ module IF(
     always @(posedge clk) begin
         if (CLR)
             PC <= 0;
-        else
+        else if (PC_EN)
             PC <= PC+1;
     end
 

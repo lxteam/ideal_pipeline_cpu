@@ -2,7 +2,7 @@
 `timescale 1ns / 1ps
 module EXtoMEM_reg(
     //通用
-    input In, input clk, input CLR, output reg Out,
+    input In, input clk,input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
     //特化
@@ -16,7 +16,7 @@ module EXtoMEM_reg(
     always @(posedge clk) begin
         if (CLR)
             {Out,IR,PC,R1,R2,RD2,WbRegNum} <= 0;
-        else begin
+        else if (EN) begin
             Out <= In;
             IR <= IR_in;
             PC <= PC_in;
@@ -32,7 +32,7 @@ endmodule
 //流水信号传递
 module ExtoMEM_signal(
     //通用
-    input In, input clk, input CLR, output reg Out,
+    input In, input clk,input EN, input CLR, output reg Out,
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -48,7 +48,7 @@ module ExtoMEM_signal(
     always @(posedge clk) begin
         if (CLR)
             {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
-        else begin
+        else if (EN) begin
             Out <= In;
 
             RegWrite <= RegWrite_in;
