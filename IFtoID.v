@@ -2,7 +2,7 @@
 `timescale 1ns / 1ps
 module IFtoID(
     //通用
-    input clk, input CLR, output reg Out,
+    input clk, input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC
     //特化
@@ -10,7 +10,7 @@ module IFtoID(
     always @(posedge clk) begin
         if (CLR) 
             {Out,IR,PC} <= 0;
-        else begin
+        else if(EN) begin
             Out <= 1;
             IR <= IR_in;
             PC <= PC_in;
