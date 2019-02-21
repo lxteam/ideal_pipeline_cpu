@@ -2,7 +2,7 @@
 `timescale 1ns / 1ps
 module EXtoMEM_reg(
     //通用
-    input In, input clk,input EN, input CLR, output reg Out,
+    input clk,input EN, input CLR, 
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
     input bb,
@@ -16,10 +16,10 @@ module EXtoMEM_reg(
 
 );
     always @(posedge clk) begin
-        if (CLR)
-            {Out,IR,PC,R1,R2,RD1,RD2,WbRegNum} <= 0;
+        if (CLR | bb)
+            {IR,PC,R1,R2,RD1,RD2,WbRegNum} <= 0;
         else if (EN) begin
-            Out <= In;
+
             IR <= IR_in;
             PC <= PC_in;
             R1 <= R1_in;
@@ -29,7 +29,7 @@ module EXtoMEM_reg(
             WbRegNum <= WbRegNum_in;
         end
         else if(bb)
-            {Out,IR,PC,R1,R2,RD2,WbRegNum} <= 0;
+            {IR,PC,R1,R2,RD2,WbRegNum} <= 0;
     end
 
 endmodule
@@ -37,7 +37,7 @@ endmodule
 //流水信号传递
 module ExtoMEM_signal(
     //通用
-    input In, input clk,input EN, input CLR, output reg Out,
+    input clk,input EN, input CLR, 
     input bb,
     //特化
     //WB
@@ -54,10 +54,9 @@ module ExtoMEM_signal(
     input Half_in, output reg Half
 );
     always @(posedge clk) begin
-        if (CLR)
-            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
+        if (CLR | bb)
+            {RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
         else if (EN) begin
-            Out <= In;
 
             RegWrite <= RegWrite_in;
             LOWrite <= LOWrite_in;
@@ -72,8 +71,7 @@ module ExtoMEM_signal(
             Half <= Half_in;
             
         end
-        else if(bb)
-            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
+
     end
 
 endmodule

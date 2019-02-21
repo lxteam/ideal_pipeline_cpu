@@ -41,7 +41,7 @@ endmodule
 //流水信号传递
 module IDtoEX_signal(
     //通用
-    input In, input clk, input EN, input CLR, output reg Out,
+    input clk, input EN, input CLR, 
     input bb_data, input bb_bj,
     //特化
     //WB
@@ -74,11 +74,10 @@ module IDtoEX_signal(
     wire bb;
     assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
-        if (CLR)
+        if (CLR | bb)
             {Out,RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
                 ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL} <= 0;
         else if (EN) begin
-            Out <= In;
 
             RegWrite <= RegWrite_in;
             LOWrite <= LOWrite_in;
@@ -105,9 +104,6 @@ module IDtoEX_signal(
             HIAlusrc <= HIAlusrc_in;
             
         end
-        else if (bb)
-            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half,
-                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc} <= 0;
     end
 
 endmodule

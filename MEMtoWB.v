@@ -2,7 +2,7 @@
 //流水信息传递
 module MEMtoWB_reg(
     //通用
-    input In, input clk,input EN, input CLR, output reg Out,
+    input clk,input EN, input CLR, 
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
     input bb,
@@ -14,8 +14,8 @@ module MEMtoWB_reg(
     input [4:0] WbRegNum_in, output reg [4:0] WbRegNum        
 );
     always @(posedge clk) begin
-        if (CLR)begin
-            {Out,IR,PC} <= 0;
+        if (CLR | bb)begin
+            {IR,PC} <= 0;
             R1 <= 0;
             R2 <= 0;
             RD1 <= 0;
@@ -23,7 +23,6 @@ module MEMtoWB_reg(
             WbRegNum <= 0;
         end
         else if (EN) begin
-            Out <= In;
             IR <= IR_in;
             PC <= PC_in;
             R1 <= R1_in;
@@ -32,18 +31,12 @@ module MEMtoWB_reg(
             RD2 <= RD2_in;
             WbRegNum <= WbRegNum_in;
         end
-        else if (bb)begin
-            {Out,IR,PC} <= 0;
-            R1 <= 0;
-            R2 <= 0;
-            WbRegNum <= 0;
-        end
     end
 endmodule
 //流水信号传递
 module MEMtoWB_signal(
     //通用
-    input In, input clk,input EN, input CLR, output reg Out,
+    input clk,input EN, input CLR, 
     input bb,
     //特化
     //WB
@@ -54,8 +47,8 @@ module MEMtoWB_signal(
     input SYSCALL_in, output reg SYSCALL
 );
     always @(posedge clk) begin
-        if (CLR)
-            {Out,RegWrite,LOWrite,HIWrite,JAL} <= 0;
+        if (CLR | bb)
+            {RegWrite,LOWrite,HIWrite,JAL} <= 0;
         else if (EN) begin
             Out <= In;
             RegWrite <= RegWrite_in;
@@ -64,8 +57,6 @@ module MEMtoWB_signal(
             JAL <= JAL_in;
             SYSCALL <= SYSCALL_in;
         end
-        else if (bb)
-            {Out,RegWrite,LOWrite,HIWrite} <= 0;
     end
 
 endmodule
