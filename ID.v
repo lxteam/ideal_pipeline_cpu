@@ -36,7 +36,8 @@ module ID(
     assign jaddr = JR ? RD1 : $unsigned(IR[25:0]);
     assign shamt = IR[10:6];
     
-    always @(posedge clk) begin
+    // negedge to deal with WB data conflict.
+    always @(negedge clk) begin
         if (HIWrite)
             HI <= HI_in;
         if (LOWrite)
