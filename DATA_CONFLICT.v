@@ -17,10 +17,10 @@ module DataConflict_ctrl(
     output bb_data
 );
     assign bb_data = 
-        (r1_used_id & regwrite_ex & wbregnum_ex == r1) |
-        (r1_used_id & regwrite_mem & wbregnum_mem == r1) |
-        (r2_used_id & regwrite_ex & wbregnum_ex == r2) |
-        (r2_used_id & regwrite_mem & wbregnum_mem == r2) | 
+        (r1_used_id & regwrite_ex & (wbregnum_ex == r1) & (r1 != 0)) |
+        (r1_used_id & regwrite_mem & (wbregnum_mem == r1) & (r1 != 0)) |
+        (r2_used_id & regwrite_ex & (wbregnum_ex == r2) & (r2 != 0)) |
+        (r2_used_id & regwrite_mem & (wbregnum_mem == r2) & (r2 != 0)) | 
         (hi_used_id & hiwrite_ex) |
         (hi_used_id & hiwrite_mem) |
         (lo_used_id & lowrite_ex) |
