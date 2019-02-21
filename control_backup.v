@@ -46,7 +46,12 @@ module control_unit(
         output bgez,
         output jr,
         output jmp,
-        output jal
+        output jal,
+        // Data conflict.
+        output r1_used,
+        output r2_used,
+        output hi_used,
+        output lo_used
     );
      // Normal
         wire[5:0] opt;
@@ -210,6 +215,16 @@ module control_unit(
         assign jr = JR;
         assign jmp = J;
         assign jal = JAL;
+        // Data confilict
+        assign r1_used = ADD | ADDU | AND | SUB | OR | NOR | SLLV | SRLV | SRAV | 
+            SUBU | XOR | MULTU | DIVU | SLT | SLTU | JR | SYSCALL | BLTZ | BGEZ | 
+            BEQ | BNE | BLEZ | BGTZ | ADDI | ADDIU | SLTIU | ANDI | ORI | XORI | 
+            LB | LH | LW | LBU | LHU | SB | SH | SW;
+        assign r2_used = ADD | ADDU | AND | SLL | SRA | SUB | OR | NOR | SLLV | 
+            SRLV | SRAV | SUBU | XOR | MULTU | DIVU | SLT | SLTU | SYSCALL | BEQ | 
+            BNE | SB | SH | SW ;
+        assign hi_used = MFHI;
+        assign lo_used = MFLO; 
 
         `define IALU 40
         always@(*) begin
