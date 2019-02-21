@@ -5,6 +5,7 @@ module EXtoMEM_reg(
     input In, input clk,input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
+    input bb,
     //特化
     input [31:0] R1_in, output reg [31:0] R1,
     input [31:0] R2_in, output reg [31:0] R2,
@@ -25,6 +26,8 @@ module EXtoMEM_reg(
             RD2 <= RD2_in;
             WbRegNum <= WbRegNum_in;
         end
+        else if(bb)
+            {Out,IR,PC,R1,R2,RD2,WbRegNum} <= 0;
     end
 
 endmodule
@@ -33,6 +36,7 @@ endmodule
 module ExtoMEM_signal(
     //通用
     input In, input clk,input EN, input CLR, output reg Out,
+    input bb,
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -61,6 +65,8 @@ module ExtoMEM_signal(
             Byte <= Byte_in;
             Half <= Half_in;
         end
+        else if(bb)
+            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
     end
 
 endmodule

@@ -5,6 +5,7 @@ module MEMtoWB_reg(
     input In, input clk,input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
+    input bb,
     //特化
     input [31:0] R1_in, output reg [31:0] R1,
     input [31:0] R2_in, output reg [31:0] R2,
@@ -25,12 +26,19 @@ module MEMtoWB_reg(
             R2 <= R2_in;
             WbRegNum <= WbRegNum_in;
         end
+        else if (bb)begin
+            {Out,IR,PC} <= 0;
+            R1 <= 0;
+            R2 <= 0;
+            WbRegNum <= 0;
+        end
     end
 endmodule
 //流水信号传递
 module MEMtoWB_signal(
     //通用
     input In, input clk,input EN, input CLR, output reg Out,
+    input bb,
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -46,6 +54,8 @@ module MEMtoWB_signal(
             LOWrite <= LOWrite_in;
             HIWrite <= HIWrite_in;
         end
+        else if (bb)
+            {Out,RegWrite,LOWrite,HIWrite} <= 0;
     end
 
 endmodule

@@ -5,6 +5,7 @@ module IDtoEX_reg(
     input In, input clk,input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
+    input bb_data, input bb_bj,
     //特化
     input [31:0] RD1_in, output reg [31:0] RD1,
     input [31:0] RD2_in, output reg [31:0] RD2,
@@ -14,6 +15,8 @@ module IDtoEX_reg(
     input [31:0] HI_in, output reg [31:0] HI,
     input [31:0] LO_in, output reg [31:0] LO
 );
+    wire bb;
+    assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
         if (CLR)
             {Out,IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
@@ -29,6 +32,8 @@ module IDtoEX_reg(
             HI <= HI_in;
             LO <= LO_in;
         end
+        else if (bb)
+            {Out,IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
     end
 
 endmodule
@@ -37,6 +42,7 @@ endmodule
 module IDtoEX_signal(
     //通用
     input In, input clk, input EN, input CLR, output reg Out,
+    input bb_data, input bb_bj,
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -61,6 +67,8 @@ module IDtoEX_signal(
     input LOAlusrc_in, output reg LOAlusrc,
     input HIAlusrc_in, output reg HIAlusrc    
 );
+    wire bb;
+    assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
         if (CLR)
             {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half,
@@ -90,6 +98,9 @@ module IDtoEX_signal(
             LOAlusrc <= LOAlusrc_in;
             HIAlusrc <= HIAlusrc_in;
         end
+        else if (bb)
+            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half,
+                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc} <= 0;
     end
 
 endmodule

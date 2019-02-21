@@ -4,7 +4,8 @@ module IFtoID(
     //通用
     input clk, input EN, input CLR, output reg Out,
     input [31:0] IR_in, output reg [31:0] IR,
-    input [31:0] PC_in, output reg [31:0] PC
+    input [31:0] PC_in, output reg [31:0] PC,
+    input bb,
     //特化
 );
     always @(posedge clk) begin
@@ -15,6 +16,8 @@ module IFtoID(
             IR <= IR_in;
             PC <= PC_in;
         end
+        else if(bb)
+            {Out,IR,PC} <= 0;
     end
 
 endmodule
