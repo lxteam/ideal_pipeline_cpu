@@ -19,7 +19,7 @@ module REGFILE(
 			mem[i] <= 0;
 	end
 	
-	always @ (posedge clk) begin
+	always @ (negedge clk) begin
 		if (RegWrite)
 			mem[WbRegNum] <= WbData;
 	end
