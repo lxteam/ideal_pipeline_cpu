@@ -8,8 +8,10 @@ module IFtoID(
     //特化
 );
     always @(posedge clk) begin
-        if (CLR) 
+        if (CLR) begin
             {Out,IR,PC} <= 0;
+            
+        end
         else if(EN) begin
             Out <= 1;
             IR <= IR_in;

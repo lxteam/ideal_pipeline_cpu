@@ -48,7 +48,7 @@ module ID(
         else
             Extended_Imm = $signed(Imm);
     end
-    REGFILE reg1((JAL ? jaddr : WbData), clk, RegWrite,WbRegNum_in, R1Num, R2Num, JAL, RD1, RD2);
+    REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, RD1, RD2);
     
 
 endmodule // 

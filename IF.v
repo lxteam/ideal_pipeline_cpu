@@ -1,29 +1,32 @@
 `timescale 1ns / 1ps
 module IF(
-    input [31:0] jaddr,
-    input [31:0] baddr,
+    input [31:0] Jaddr,
+    input [31:0] PC_branch,
     input JAL,input J, input JR, input Branch,
     input clk,
     input PC_EN,
     input CLR,
 
     output [31:0] IR,
-    output reg [31:0] PC
+    output [31:0] PC_out
 );
-    parameter width = 5;
+    parameter ADDR_WIDTH = 5;
+    parameter DEPTH = 2**ADDR_WIDTH;
     integer i;
-    reg [31:0] rom[2**width-1:0];
+    reg [ADDR_WIDTH-1:0] pc;
+    assign PC_out = pc;
+    reg [31:0] rom[DEPTH-1:0];
     initial begin
-        for (i = 0; i<2**width; i = i+1)
+        for (i = 0; i<DEPTH; i = i+1)
             rom[i] = 0;
         $readmemh("/home/wc/w/ideal_test.hex",rom);
     end
-    assign IR = rom[PC];
+    assign IR = rom[pc];
     always @(posedge clk) begin
         if (CLR)
-            PC <= 0;
+            pc <= 0;
         else if (PC_EN)
-            PC <= PC+1;
+            pc <= JAL ? Jaddr : (Branch ? PC_branch : pc+1);
     end
 
 
