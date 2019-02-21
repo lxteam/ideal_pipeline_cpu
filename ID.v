@@ -14,6 +14,7 @@ module ID(
     input [31:0] WbData,
     input [31:0] HI_in,
     input [4:0] WbRegNum_in,
+    input Branch,
 
     output [31:0] RD1,
     output [31:0] RD2,
@@ -22,7 +23,8 @@ module ID(
     output [4:0] shamt,
     output reg [31:0] HI,
     output reg [31:0] LO,
-    output [31:0] jaddr
+    output [31:0] jaddr,
+    output bubble2
 );
     wire [5:0] OP = IR[31:26];
     wire [5:0] Func = IR[5:0];
@@ -49,8 +51,8 @@ module ID(
             Extended_Imm = $signed(Imm);
     end
     REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, RD1, RD2);
-    
-
+    assign bubble2 = Branch;
+ 
 endmodule // 
 
 /*

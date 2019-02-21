@@ -8,7 +8,8 @@ module IF(
     input CLR,
 
     output [31:0] IR,
-    output [31:0] PC_out
+    output [31:0] PC_out,
+    output bubble1
 );
     parameter ADDR_WIDTH = 5;
     parameter DEPTH = 2**ADDR_WIDTH;
@@ -21,6 +22,7 @@ module IF(
             rom[i] = 0;
         $readmemh("/home/wc/w/ideal_test.hex",rom);
     end
+    assign bubble1 = JAL || J || JR || Branch;
     assign IR = rom[pc];
     always @(posedge clk) begin
         if (CLR)
