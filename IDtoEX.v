@@ -49,6 +49,9 @@ module IDtoEX_signal(
     input LOWrite_in, output reg LOWrite,
     input HIWrite_in, output reg HIWrite,
     input MemtoReg_in, output reg MemtoReg,
+    input JAL_in, output reg JAL,
+    input SYSCALL_in, output reg SYSCALL,
+    
     //MEM
     input MemWrite_in, output reg MemWrite,
     input UnsignedExt_Mem_in, output reg UnsignedExt_Mem,
@@ -65,14 +68,15 @@ module IDtoEX_signal(
     input LUI_in, output reg LUI,
     input Regtoshamt_in, output reg Regtoshamt,
     input LOAlusrc_in, output reg LOAlusrc,
-    input HIAlusrc_in, output reg HIAlusrc    
+    input HIAlusrc_in, output reg HIAlusrc
+    
 );
     wire bb;
     assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
         if (CLR)
-            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half,
-                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc} <= 0;
+            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
+                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL} <= 0;
         else if (EN) begin
             Out <= In;
 
@@ -80,6 +84,8 @@ module IDtoEX_signal(
             LOWrite <= LOWrite_in;
             HIWrite <= HIWrite_in;
             MemtoReg <= MemtoReg_in;
+            JAL <= JAL_in;
+            SYSCALL <= SYSCALL_in;
 
             MemWrite <= MemWrite_in;
             UnsignedExt_Mem <= UnsignedExt_Mem_in;
@@ -97,6 +103,7 @@ module IDtoEX_signal(
             Regtoshamt <= Regtoshamt_in;
             LOAlusrc <= LOAlusrc_in;
             HIAlusrc <= HIAlusrc_in;
+            
         end
         else if (bb)
             {Out,RegWrite,LOWrite,HIWrite,MemtoReg,MemWrite,UnsignedExt_Mem,Byte,Half,

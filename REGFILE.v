@@ -8,7 +8,6 @@ module REGFILE(
 	input [4:0]WbRegNum, 
 	input [4:0]R1Num, 
 	input [4:0]R2Num,
-	input JAL,
 
 	output [31:0]A, 
 	output [31:0]B
@@ -21,7 +20,7 @@ module REGFILE(
 	end
 	
 	always @ (posedge clk) begin
-		if(RegWrite | JAL)
+		if (RegWrite)
 			mem[WbRegNum] <= WbData;
 	end
 	assign A=mem[R1Num];
