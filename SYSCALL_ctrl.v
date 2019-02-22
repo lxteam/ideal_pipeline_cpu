@@ -1,26 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2019/02/20 19:27:44
-// Design Name: 
-// Module Name: SYSCALL_ctrl
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-//generate syscall control signal
 module SYSCALL_ctrl(
+    input clk,
     input CLR,
     input SYSCALL,
     input GO,
@@ -31,16 +11,25 @@ module SYSCALL_ctrl(
     output reg [31:0] display,
     output reg halt
     );
-    assign print = v0 == 34 & SYSCALL;
-    always @(posedge CLR, posedge SYSCALL, posedge GO) begin
+    wire print = v0 == 34 & SYSCALL;
+    reg [1:0] GO_last;
+    always @(posedge clk)begin
+        case ({GO,GO_last})
+            3'b100: GO_last <= 2'b01;
+            3'b101: GO_last <= 2'b10;
+            3'b110: GO_last <= 2'b10;
+//            3'b111: GO_last <= 2'b00;
+            default: GO_last <= 2'b00;
+        endcase
+    end
+    always @(posedge CLR, posedge SYSCALL, posedge GO_last[0]) begin
         if (CLR)
             halt <= 0;
+        else if (GO_last[0]) begin
+            halt <= v0==10;       
+        end
         else if (SYSCALL)
-            halt <= v0 == 10;
-//        else if (GO) begin
-//            halt <= v0==10;       
-//        end
-    
+            halt <= 1; 
     end
     always @(posedge print)
         display <= a0;

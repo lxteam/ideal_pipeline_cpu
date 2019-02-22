@@ -14,7 +14,7 @@ module MEMtoWB_reg(
     input [4:0] WbRegNum_in, output reg [4:0] WbRegNum        
 );
     always @(posedge clk) begin
-        if (CLR | bb)begin
+        if (CLR | (bb&EN))begin
             {IR,PC} <= 0;
             R1 <= 0;
             R2 <= 0;
@@ -47,7 +47,7 @@ module MEMtoWB_signal(
     input SYSCALL_in, output reg SYSCALL
 );
     always @(posedge clk) begin
-        if (CLR | bb)
+        if (CLR | (bb&EN))
             {RegWrite,LOWrite,HIWrite,JAL} <= 0;
         else if (EN) begin
             RegWrite <= RegWrite_in;

@@ -16,7 +16,7 @@ module EXtoMEM_reg(
 
 );
     always @(posedge clk) begin
-        if (CLR | bb)
+        if (CLR | (bb&EN))
             {IR,PC,R1,R2,RD1,RD2,WbRegNum} <= 0;
         else if (EN) begin
 
@@ -54,7 +54,7 @@ module ExtoMEM_signal(
     input Half_in, output reg Half
 );
     always @(posedge clk) begin
-        if (CLR | bb)
+        if (CLR | (bb&EN))
             {RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half} <= 0;
         else if (EN) begin
 

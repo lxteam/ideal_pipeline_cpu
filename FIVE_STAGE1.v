@@ -35,11 +35,8 @@ module FIVE_STAGE1(
         ALUSRC,LUI,Regtoshamt,LOAlusrc,HIAlusrc,MemWrite,
         Byte,Half,RegWrite,LOWrite,HIWrite,MemtoReg,UnsignedExt_Imm,
         UnsignedExt_Mem,B,EQ,Less,Reverse,BGEZ,JR,JMP,JAL, R1Used, R2Used, HiUsed, LoUsed);
-    SYSCALL_ctrl SysC1(CLR,SYSCALL_out4,GO,RD1_out4,RD2_out4,display,halt);
+    SYSCALL_ctrl SysC1(clk,CLR,SYSCALL_out4,GO,RD1_out4,RD2_out4,display,halt);
     DataConflict_ctrl DatC1(R1Used, R2Used, HiUsed, LoUsed, ID1.R1Num, ID1.R2Num, RegWrite_out2, WbRegNum_out2, RegWrite_out3, WbRegNum_out3, HIWrite_out2, LOWrite_out2, HIWrite_out3, LOWrite_out3, bb_data);
-
-
-
 endmodule // 
 
 

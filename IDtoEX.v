@@ -16,7 +16,7 @@ module IDtoEX_reg(
     input [31:0] LO_in, output reg [31:0] LO
 );
     always @(posedge clk) begin
-        if (CLR | bb)
+        if (CLR | (bb&EN))
             {IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
         else if (EN) begin
             IR <= IR_in;
@@ -67,7 +67,7 @@ module IDtoEX_signal(
     
 );
     always @(posedge clk) begin
-        if (CLR | bb)
+        if (CLR | (bb&EN))
             {RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
                 ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL} <= 0;
         else if (EN) begin
