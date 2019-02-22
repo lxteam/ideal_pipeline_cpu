@@ -10,11 +10,13 @@ module MEM(
     input Half,
     input CLR,
     
-    output [31:0] R1
+    output [31:0] R1,
+    output [31:0] ZDX_ID_MEM
 );
     wire [31:0] R1_t;
     MIPS_RAM ram1(R1_in, data_in, MemWrite, clk, Byte, Half, CLR, UnsignedExt_Mem, R1_t);
     assign R1 = MemtoReg ? R1_t : R1_in;
+    assign ZDX_ID_MEM = R1_t;
 endmodule // 
 
 // module MIPS_RAM(

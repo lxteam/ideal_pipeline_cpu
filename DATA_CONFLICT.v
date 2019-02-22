@@ -13,18 +13,42 @@ module DataConflict_ctrl(
     input lowrite_ex,
     input hiwrite_mem,
     input lowrite_mem,
+    input [31:0] ZDX_HI,
+    input [31:0] ZDX_ALURES,
+    input ZDX_JAL,
+    input [31:0] ZDX_ADDR,
+    input MEM_load,
+    input [31:0]ZDX_id_Mem,
+    input ZDX_JAL_MEM,
+    input [31:0] ZDX_ADDR_MEM,
+    input [31:0] ZDX_Hi_MEM,
+    input [31:0] ZDX_ALURES_MEM,
+    input EX_load
 
-    output bb_data
+    output R1_EX,
+    output R2_EX,
+    output R1_MEM,
+    output R2_MEM,
+    output Hi_EX,
+    output Lo_EX,
+    output Hi_MEM,
+    output Lo_MEM,
+    output [31:0] ZDX_EX,
+    output [31:0] ZDX_MEM,
+    output LOAD_USE
 );
-    assign bb_data = 
-        (r1_used_id & regwrite_ex & (wbregnum_ex == r1) & (r1 != 0)) |
-        (r1_used_id & regwrite_mem & (wbregnum_mem == r1) & (r1 != 0)) |
-        (r2_used_id & regwrite_ex & (wbregnum_ex == r2) & (r2 != 0)) |
-        (r2_used_id & regwrite_mem & (wbregnum_mem == r2) & (r2 != 0)) | 
-        (hi_used_id & hiwrite_ex) |
-        (hi_used_id & hiwrite_mem) |
-        (lo_used_id & lowrite_ex) |
-        (lo_used_id & lowrite_mem); 
-
+    wire EX_MULDIV = hiwrite_ex & lowrite_ex;
+    wire MEM_MULDIV = hiwrite_mem & lowrite_mem;
+    assign R1_EX  = r1_used_id & regwrite_ex & (wbregnum_ex == r1) & (r1 != 0);
+    assign R1_MEM = r1_used_id & regwrite_mem & (wbregnum_mem == r1) & (r1 != 0) & (!R1_EX);
+    assign R2_EX  = r2_used_id & regwrite_ex & (wbregnum_ex == r2) & (r2 != 0);
+    assign R2_MEM = r2_used_id & regwrite_mem & (wbregnum_mem == r2) & (r2 != 0) & (!R2_EX);
+    assign Hi_EX  = hi_used_id & hiwrite_ex;
+    assign Hi_MEM = hi_used_id & hiwrite_mem & (!Hi_EX);
+    assign Lo_EX  = lo_used_id & lowrite_ex;
+    assign Lo_MEM = lo_used_id & lowrite_mem & (Lo_EX); 
+    assign ZDX_EX = EX_MULDIV ? (Hi_EX ? ZDX_HI : ZDX_ALURES) : (ZDX_JAL ? : ZDX_ADDR :ZDX_ALURES);
+    assign ZDX_MEM= MEM_load ? ZDX_id_Mem :(ZDX_JAL_MEM ? ZDX_ADDR_MEM : (MEM_MULDIV ? (Hi_MEM ? ZDX_Hi_MEM : ZDX_ALURES_MEM) : ZDX_ALURES_MEM));
+    assign LOAD_USE = (R1_EX || R2_EX) && EX_load;
 endmodule
 

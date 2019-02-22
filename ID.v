@@ -16,6 +16,16 @@ module ID(
     input [31:0] HI_in,
     input [4:0] WbRegNum_in,
     input Branch,
+    input R1_EX,
+    input R1_MEM,
+    input R2_EX,
+    input R2_MEM,
+    input HI_EX,
+    input HI_MEM,
+    input LO_EX,
+    input LO_MEM,
+    input ZDX_EX,
+    input ZDX_MEM,
 
     output [31:0] RD1,
     output [31:0] RD2,
@@ -34,20 +44,21 @@ module ID(
     wire [15:0] Imm = IR[15:0];
     wire [4:0] R1Num = SYSCALL ? 2 : rs;
     wire [4:0] R2Num = SYSCALL ? 4 : rt;
+    wire A_1 , B_1, HI_1, LO_1;
     assign WbRegNum = JAL ? 31 : (RegDst ? rd : rt);
     assign jaddr = JR ? RD1 : $unsigned(IR[25:0]); //J addr PC[31:28]
     assign shamt = IR[10:6];
     // negedge to deal with WB data conflict.
     always @(negedge clk) begin
         if (CLR) begin
-            HI <= 0;
-            LO <= 0;
+            HI_1 <= 0;
+            LO_1 <= 0;
         end
         else begin
             if (HIWrite)
-                HI <= HI_in;
+                HI_1 <= HI_in;
             if (LOWrite)
-                LO <= WbData;
+                LO_1 <= WbData;
         end
     end
     always @(*)begin
@@ -56,8 +67,11 @@ module ID(
         else
             Extended_Imm = $signed(Imm);
     end
-    REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, RD1, RD2);
- 
+    REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, A_1, B_1);
+    assign RD1 = (R1_EX) ? ZDX_EX : ((R1_MEM) ? ZDX_MEM : A_1);
+    assign RD2 = (R2_EX) ? ZDX_EX : ((R2_MEM) ? ZDX_MEM : B_1);
+    assign HI  = (HI_EX) ? ZDX_EX : ((HI_MEM) ? ZDX_MEM :HI_1);
+    assign LO  = (LO_EX) ? ZDX_EX : ((HI_MEM) ? ZDX_MEM :LO_1); 
 endmodule // 
 
 /*
