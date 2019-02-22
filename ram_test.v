@@ -37,7 +37,7 @@ module RAM_test();
         
     end
     always begin
-        #10 clk = ~clk;
+        #3 clk = ~clk;
     end
     always @(data_out)
         $monitor("load, data_out = %h", data_out);

@@ -20,7 +20,7 @@ module REGFILE(
 	end
 	
 	always @ (negedge clk) begin
-		if (RegWrite)
+		if (RegWrite && WbRegNum!=0)
 			mem[WbRegNum] <= WbData;
 	end
 	assign A=mem[R1Num];

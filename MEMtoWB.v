@@ -50,7 +50,6 @@ module MEMtoWB_signal(
         if (CLR | bb)
             {RegWrite,LOWrite,HIWrite,JAL} <= 0;
         else if (EN) begin
-            Out <= In;
             RegWrite <= RegWrite_in;
             LOWrite <= LOWrite_in;
             HIWrite <= HIWrite_in;

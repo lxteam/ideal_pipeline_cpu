@@ -23,83 +23,82 @@ module ALU(
     end
 
 	assign shift_y = {27'b0000_0000_0000_0000_0000_0000_000,shamt};
-	assign shift_x = $signed(X) >>> shift_y;
+	assign shift_x = $signed(Y) >>> shift_y;
 	assign Equal = (X == Y); 
-    
 always@(*)
 begin 
 	case(ALU_OP)
-	0:
+	4'h0:
 		begin            
-			Result <= X << shamt;
+			Result <= Y << shamt;
 			Result2 <= 0; OF <= 0; UOF <= 0;
 		end
-	1:
+	4'h1:
 		begin            
 			Result <= shift_x;
 			Result2 <= 0;OF <= 0; UOF <= 0;
 		end
-	2:
+	4'h2:
 		begin            
-			Result <= X >> shamt;
+			Result <= Y >> shamt;
 			Result2 <= 0;OF <= 0; UOF <= 0;
 		end
-	3:
+	4'h3:
 		begin	
 			{Result2, Result} <= $signed(X) * $signed(Y);
 			OF <= 0; UOF <= 0;
 		end
-	4:
+	4'h4:
 		begin            
 			Result <= X / Y;
 			Result2 <= X % Y;
 			OF <= 0; UOF <= 0;
 		end
-	5:
+	4'h5:
 		begin            
 			Result <= X + Y;
 			OF <= (X[31] & Y[31] & ~Result[31]) || (~X[31] & ~Y[31] & Result[31]);
 			UOF <= (Result < X) || (Result < Y);
 			Result2 <= 0;
 		end
-	6:
+	4'h6:
 		begin            
 			Result <= X - Y;
 			OF <= (X[31] & Y[31] & ~Result[31]) || (~X[31] & ~Y[31] & Result[31]);
 			UOF <= Result > X;
 			Result2 <= 0;
 		end
-	7:
+	4'h7:
 		begin            
 			Result <= X & Y;
 			Result2 <= 0;
 			OF <= 0; UOF <= 0;
 		end
-	8:
+	4'h8:
 		begin            
 			Result <= X | Y;
 			Result2 <= 0;
 			OF <= 0; UOF <= 0;
 		end
-	9:
+	4'h9:
 		begin            
 			Result <= X ^ Y;
 			Result2 <= 0;
 			OF <= 0; UOF <= 0;
 		end
-	10:
+	4'ha:
 		begin            
 			Result <= ~(X | Y);
 			Result2 <= 0;
 			OF <= 0; UOF <= 0;
 		end
-	11:
+	4'hb:
 		begin
-			Result <= ($signed(X) < $signed(Y))? 1 : 0;
+			Result <= {31'h0,($signed(X) < $signed(Y))};
 			Result2 <= 0;
 			OF <= 0; UOF <= 0;
 		end
-	12:
+	4'hc:
 		begin            
 			Result <= (X < Y)? 1 : 0;
 			Result2 <= 0;

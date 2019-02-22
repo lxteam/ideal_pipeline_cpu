@@ -2,6 +2,7 @@
 module ID(
     input [31:0] IR,
     input clk,
+    input CLR,
     input SYSCALL,
     input UnsignedExt_Imm,
     input RegDst,
@@ -23,8 +24,7 @@ module ID(
     output [4:0] shamt,
     output reg [31:0] HI,
     output reg [31:0] LO,
-    output [31:0] jaddr,
-    output bubble2
+    output [31:0] jaddr
 );
     wire [5:0] OP = IR[31:26];
     wire [5:0] Func = IR[5:0];
@@ -32,18 +32,23 @@ module ID(
     wire [4:0] rt = IR[20:16];
     wire [4:0] rd = IR[15:11];
     wire [15:0] Imm = IR[15:0];
-    wire [4:0] R1Num = SYSCALL ? 4 : rs;
-    wire [4:0] R2Num = SYSCALL ? 2 : rt;
+    wire [4:0] R1Num = SYSCALL ? 2 : rs;
+    wire [4:0] R2Num = SYSCALL ? 4 : rt;
     assign WbRegNum = JAL ? 31 : (RegDst ? rd : rt);
-    assign jaddr = JR ? RD1 : $unsigned(IR[25:0]);
+    assign jaddr = JR ? RD1 : $unsigned(IR[25:0]); //J addr PC[31:28]
     assign shamt = IR[10:6];
-    
     // negedge to deal with WB data conflict.
     always @(negedge clk) begin
-        if (HIWrite)
-            HI <= HI_in;
-        if (LOWrite)
-            LO <= WbData;
+        if (CLR) begin
+            HI <= 0;
+            LO <= 0;
+        end
+        else begin
+            if (HIWrite)
+                HI <= HI_in;
+            if (LOWrite)
+                LO <= WbData;
+        end
     end
     always @(*)begin
         if (UnsignedExt_Imm)
@@ -52,7 +57,6 @@ module ID(
             Extended_Imm = $signed(Imm);
     end
     REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, RD1, RD2);
-    assign bubble2 = Branch;
  
 endmodule // 
 

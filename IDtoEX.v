@@ -2,10 +2,10 @@
 `timescale 1ns / 1ps
 module IDtoEX_reg(
     //通用
-    input In, input clk,input EN, input CLR, output reg Out,
+    input clk,input EN, input CLR, 
     input [31:0] IR_in, output reg [31:0] IR,
     input [31:0] PC_in, output reg [31:0] PC,
-    input bb_data, input bb_bj,
+    input bb, 
     //特化
     input [31:0] RD1_in, output reg [31:0] RD1,
     input [31:0] RD2_in, output reg [31:0] RD2,
@@ -15,13 +15,10 @@ module IDtoEX_reg(
     input [31:0] HI_in, output reg [31:0] HI,
     input [31:0] LO_in, output reg [31:0] LO
 );
-    wire bb;
-    assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
-        if (CLR)
-            {Out,IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
+        if (CLR | bb)
+            {IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
         else if (EN) begin
-            Out <= In;
             IR <= IR_in;
             PC <= PC_in;
             RD1 <= RD1_in;
@@ -32,8 +29,6 @@ module IDtoEX_reg(
             HI <= HI_in;
             LO <= LO_in;
         end
-        else if (bb)
-            {Out,IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
     end
 
 endmodule
@@ -42,7 +37,7 @@ endmodule
 module IDtoEX_signal(
     //通用
     input clk, input EN, input CLR, 
-    input bb_data, input bb_bj,
+    input bb, 
     //特化
     //WB
     input RegWrite_in, output reg RegWrite,
@@ -71,11 +66,9 @@ module IDtoEX_signal(
     input HIAlusrc_in, output reg HIAlusrc
     
 );
-    wire bb;
-    assign bb = bb_data | bb_bj;
     always @(posedge clk) begin
         if (CLR | bb)
-            {Out,RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
+            {RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
                 ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL} <= 0;
         else if (EN) begin
 

@@ -11,24 +11,32 @@ module IF(
     output [31:0] PC_out,
     output bubble1
 );
-    parameter ADDR_WIDTH = 5;
+    parameter ADDR_WIDTH = 10;
     parameter DEPTH = 2**ADDR_WIDTH;
     integer i;
     reg [ADDR_WIDTH-1:0] pc;
-    assign PC_out = pc;
+    assign PC_out = pc+1;
     reg [31:0] rom[DEPTH-1:0];
     initial begin
         for (i = 0; i<DEPTH; i = i+1)
             rom[i] = 0;
-        $readmemh("/home/wc/w/ideal_test.hex",rom);
+        $readmemh("/home/wc/w/benchmark.ht",rom);
+//            $readmemh("/home/wc/w/sort.ht",rom);
     end
-    assign bubble1 = JAL || J || JR || Branch;
+    assign bubble1 = JAL | J | JR | Branch;
     assign IR = rom[pc];
     always @(posedge clk) begin
         if (CLR)
             pc <= 0;
-        else if (PC_EN)
-            pc <= JAL ? Jaddr : (Branch ? PC_branch : pc+1);
+        else if (PC_EN) begin
+            if (Branch)
+                pc <= PC_branch;
+            else if (JAL|JR|J)
+                pc <= Jaddr;
+            else
+                pc <= PC_out;
+            
+        end
     end
 
 

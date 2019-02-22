@@ -204,7 +204,7 @@ module control_unit(
         assign regwrite = (JAL | regdst) | ((((ADDI | ADDIU) | (SLTI | SLTI)) | ((ANDI | ORI) | (XORI | LUI))) | ( ( (LB | LH) | (LW | LBU) ) | (LHU | MFHI))) ;
         assign lowrite = MULTU | DIVU;
         assign hiwrite = lowrite;
-        assign memtoreg = SB | SH | SW;
+        assign memtoreg = LB | LH | LW | LBU | LHU;
         assign unsignedext_imm = ADDIU | ANDI | XORI | ORI;
         assign unsignedext_mem = LBU | LHU;
         assign b = (BLTZ | BGEZ) | (BEQ | BNE) | (BLEZ | BGTZ);
@@ -228,45 +228,56 @@ module control_unit(
 
         `define IALU 40
         always@(*) begin
-            case( {BGTZ, BLEZ, BGEZ, BLTZ, MFHI, SW, SH, SB, LHU, LBU, LW, LH, LB, LUI, XORI,
-             ORI, ANDI, SLTIU, SLTI, ADDIU, ADDI, DIVU, MFLO, SLT, SLTU,
-            MULTU, XOR, SUBU, SRAV, SRLV, SLLV, NOR, OR, SUB, SRL, 
-          SRA, SLL, AND, ADDU, ADD})
+            case( {BGTZ, BLEZ, BGEZ, BLTZ, MFHI,
+             SW, SH, SB, LHU, LBU,
+             LW, LH, LB, LUI, XORI,
+             ORI, ANDI, SLTIU, SLTI, ADDIU,
+             ADDI, DIVU, MFLO, SLT, SLTU,
+             MULTU, XOR, SUBU, SRAV, SRLV, 
+             SLLV, NOR, OR, SUB, SRL, 
+             SRA, SLL, AND, ADDU, ADD})
                 `IALU'b0000000000000000000000000000000000000001: aluop <= 5;
                 `IALU'b0000000000000000000000000000000000000010: aluop <= 5;
                 `IALU'b0000000000000000000000000000000000000100: aluop <= 7;
                 `IALU'b0000000000000000000000000000000000001000: aluop <= 0;
                 `IALU'b0000000000000000000000000000000000010000: aluop <= 1;
+                
                 `IALU'b0000000000000000000000000000000000100000: aluop <= 2;
                 `IALU'b0000000000000000000000000000000001000000: aluop <= 6;
                 `IALU'b0000000000000000000000000000000010000000: aluop <= 8;
                 `IALU'b0000000000000000000000000000000100000000: aluop <= 10;
                 `IALU'b0000000000000000000000000000001000000000: aluop <= 0;
+                
                 `IALU'b0000000000000000000000000000010000000000: aluop <= 2;
                 `IALU'b0000000000000000000000000000100000000000: aluop <= 1;
                 `IALU'b0000000000000000000000000001000000000000: aluop <= 6;
                 `IALU'b0000000000000000000000000010000000000000: aluop <= 9;
                 `IALU'b0000000000000000000000000100000000000000: aluop <= 3;
-                `IALU'b0000000000000000000000001000000000000000: aluop <= 4;
-                `IALU'b0000000000000000000000010000000000000000: aluop <= 5;
-                `IALU'b0000000000000000000000100000000000000000: aluop <= 11;
-                `IALU'b0000000000000000000001000000000000000000: aluop <= 12;
+                
+                `IALU'b0000000000000000000000001000000000000000: aluop <= 11;
+                `IALU'b0000000000000000000000010000000000000000: aluop <= 11;
+                `IALU'b0000000000000000000000100000000000000000: aluop <= 5;
+                `IALU'b0000000000000000000001000000000000000000: aluop <= 4;
                 `IALU'b0000000000000000000010000000000000000000: aluop <= 5;
+                
                 `IALU'b0000000000000000000100000000000000000000: aluop <= 5;
                 `IALU'b0000000000000000001000000000000000000000: aluop <= 11;
                 `IALU'b0000000000000000010000000000000000000000: aluop <= 12;
                 `IALU'b0000000000000000100000000000000000000000: aluop <= 7;
                 `IALU'b0000000000000001000000000000000000000000: aluop <= 8;
+                
                 `IALU'b0000000000000010000000000000000000000000: aluop <= 9;
                 `IALU'b0000000000000100000000000000000000000000: aluop <= 0;
                 `IALU'b0000000000001000000000000000000000000000: aluop <= 5;
                 `IALU'b0000000000010000000000000000000000000000: aluop <= 5;
                 `IALU'b0000000000100000000000000000000000000000: aluop <= 5;
+                
                 `IALU'b0000000001000000000000000000000000000000: aluop <= 5;
                 `IALU'b0000000010000000000000000000000000000000: aluop <= 5;
                 `IALU'b0000000100000000000000000000000000000000: aluop <= 5;
                 `IALU'b0000001000000000000000000000000000000000: aluop <= 5;
                 `IALU'b0000010000000000000000000000000000000000: aluop <= 5;
+                
                 `IALU'b0000100000000000000000000000000000000000: aluop <= 5;
                 `IALU'b0001000000000000000000000000000000000000: aluop <= 11;
                 `IALU'b0010000000000000000000000000000000000000: aluop <= 11;

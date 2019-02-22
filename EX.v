@@ -37,5 +37,5 @@ module EX(
                     (B && (~EQ) &&   Less  && (~Reverse) && ( BGEZ) && (~equal)  && ( XlessY)  && (~BGEZ_flagbit))||
                     (B && (~EQ) &&   Less  && (~Reverse) && ( BGEZ) && ( equal)  && (~XlessY)  &&   BGEZ_flagbit)||
                     (B && (~EQ) &&   Less  && (~Reverse) &&   BGEZ  && (~equal)  && (~XlessY)  &&   BGEZ_flagbit);
-    assign PC_branch = PC + Extended_Imm << 2;
+    assign PC_branch = PC + Extended_Imm;
 endmodule

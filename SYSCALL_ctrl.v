@@ -31,15 +31,15 @@ module SYSCALL_ctrl(
     output reg [31:0] display,
     output reg halt
     );
-    assign print = v0 == 34;
+    assign print = v0 == 34 & SYSCALL;
     always @(posedge CLR, posedge SYSCALL, posedge GO) begin
         if (CLR)
             halt <= 0;
         else if (SYSCALL)
-            halt <= 1;
-        else if (GO) begin
-            halt <= v0==10;       
-        end
+            halt <= v0 == 10;
+//        else if (GO) begin
+//            halt <= v0==10;       
+//        end
     
     end
     always @(posedge print)
