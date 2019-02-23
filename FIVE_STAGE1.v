@@ -16,7 +16,7 @@ module FIVE_STAGE1(
     wire[31:0] Extended_Imm,Extended_Imm_out2,HI,LO,HI_out2,LO_out2;
     wire[31:0] RD1,RD1_out2,RD1_out3,RD1_out4,RD2,RD2_out2,RD2_out3,RD2_out4;
     wire R1_EX,R2_EX,R1_MEM,R2_MEM,Hi_EX,Lo_EX,Hi_MEM,Lo_MEM;
-    wire [31:0] ZDX_EX,ZDX_MEM;
+    wire [31:0] ZDX_EX,ZDX_MEM,ZDX_ID_MEM;
     
     
 //enable list, 'a' is signal part enable, 'b' is reg part enable
@@ -39,7 +39,7 @@ module FIVE_STAGE1(
         Byte,Half,RegWrite,LOWrite,HIWrite,MemtoReg,UnsignedExt_Imm,
         UnsignedExt_Mem,B,EQ,Less,Reverse,BGEZ,JR,JMP,JAL, R1Used, R2Used, HiUsed, LoUsed);
     SYSCALL_ctrl SysC1(clk,CLR,SYSCALL_out4,GO,RD1_out4,RD2_out4,display,halt);
-    DataConflict_ctrl DatC1(R1Used, R2Used, HiUsed, LoUsed, ID1.R1Num, ID1.R2Num, RegWrite_out2, WbRegNum_out2, RegWrite_out3, WbRegNum_out3, HIWrite_out2, LOWrite_out2, HIWrite_out3, LOWrite_out3, R2,R1,JAL_out2,PC_out2,ZDX_ID_MEM,JAL_out3,PC_out3,R2_out3,R1_out3,MemWrite_out2,R1_EX,R2_EX,R1_MEM,R2_MEM,Hi_EX,Lo_EX,Hi_MEM,Lo_MEM,ZDX_EX,ZDX_MEM,LOAD_USE);
+    DataConflict_ctrl DatC1(R1Used, R2Used, HiUsed, LoUsed, ID1.R1Num, ID1.R2Num, RegWrite_out2, WbRegNum_out2, RegWrite_out3, WbRegNum_out3, HIWrite_out2, LOWrite_out2, HIWrite_out3, LOWrite_out3, R2,R1,JAL_out2,PC_out2,MemtoReg_out3,ZDX_ID_MEM,JAL_out3,PC_out3,R2_out3,R1_out3,MemtoReg_out2,R1_EX,R2_EX,R1_MEM,R2_MEM,Hi_EX,Lo_EX,Hi_MEM,Lo_MEM,ZDX_EX,ZDX_MEM,LOAD_USE);
 endmodule // 
 
 

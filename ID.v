@@ -24,8 +24,8 @@ module ID(
     input HI_MEM,
     input LO_EX,
     input LO_MEM,
-    input ZDX_EX,
-    input ZDX_MEM,
+    input [31:0] ZDX_EX,
+    input [31:0] ZDX_MEM,
 
     output [31:0] RD1,
     output [31:0] RD2,
@@ -45,7 +45,7 @@ module ID(
     wire [4:0] R1Num = SYSCALL ? 2 : rs;
     wire [4:0] R2Num = SYSCALL ? 4 : rt;
     reg [31:0] HI, LO;
-    wire A_I , B_I;
+    wire [31:0] A_I , B_I;
     assign WbRegNum = JAL ? 31 : (RegDst ? rd : rt);
     assign jaddr = JR ? RD1 : $unsigned(IR[25:0]); //J addr PC[31:28]
     assign shamt = IR[10:6];

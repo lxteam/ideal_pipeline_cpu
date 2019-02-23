@@ -9,7 +9,7 @@ module IFtoID(
     //特化
 );
     always @(posedge clk) begin
-        if (CLR | bb) begin
+        if (CLR | (bb & EN)) begin
             {IR,PC} <= 0;
             
         end

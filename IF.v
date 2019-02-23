@@ -20,7 +20,7 @@ module IF(
     initial begin
         for (i = 0; i<DEPTH; i = i+1)
             rom[i] = 0;
-        $readmemb("C:/Users/liucongyu/redirect/dc.b",rom);
+        $readmemh("/home/wc/w/benchmark.ht",rom);
         // for (i = 0; i < DEPTH; i = i+1)
         //     $display("line %d : %h\n", i, rom[i]);
 //            $readmemh("/home/wc/w/sort.ht",rom);
