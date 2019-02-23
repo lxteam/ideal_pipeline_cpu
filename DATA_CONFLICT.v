@@ -23,7 +23,7 @@ module DataConflict_ctrl(
     input [31:0] ZDX_ADDR_MEM,
     input [31:0] ZDX_Hi_MEM,
     input [31:0] ZDX_ALURES_MEM,
-    input EX_load
+    input EX_load,
 
     output R1_EX,
     output R2_EX,
@@ -47,7 +47,7 @@ module DataConflict_ctrl(
     assign Hi_MEM = hi_used_id & hiwrite_mem & (!Hi_EX);
     assign Lo_EX  = lo_used_id & lowrite_ex;
     assign Lo_MEM = lo_used_id & lowrite_mem & (Lo_EX); 
-    assign ZDX_EX = EX_MULDIV ? (Hi_EX ? ZDX_HI : ZDX_ALURES) : (ZDX_JAL ? : ZDX_ADDR :ZDX_ALURES);
+    assign ZDX_EX = EX_MULDIV ? (Hi_EX ? ZDX_HI : ZDX_ALURES) : (ZDX_JAL ? ZDX_ADDR :ZDX_ALURES);
     assign ZDX_MEM= MEM_load ? ZDX_id_Mem :(ZDX_JAL_MEM ? ZDX_ADDR_MEM : (MEM_MULDIV ? (Hi_MEM ? ZDX_Hi_MEM : ZDX_ALURES_MEM) : ZDX_ALURES_MEM));
     assign LOAD_USE = (R1_EX || R2_EX) && EX_load;
 endmodule
