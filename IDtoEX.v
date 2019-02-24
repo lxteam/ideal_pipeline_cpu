@@ -63,13 +63,15 @@ module IDtoEX_signal(
     input LUI_in, output reg LUI,
     input Regtoshamt_in, output reg Regtoshamt,
     input LOAlusrc_in, output reg LOAlusrc,
-    input HIAlusrc_in, output reg HIAlusrc
+    input HIAlusrc_in, output reg HIAlusrc,
+    input J_in, output reg J,
+    input ERET_in, output reg ERET
     
 );
     always @(posedge clk) begin
         if (CLR | (bb&EN))
             {RegWrite,LOWrite,HIWrite,MemtoReg,JAL,MemWrite,UnsignedExt_Mem,Byte,Half,
-                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL} <= 0;
+                ALU_OP,ALU_SRC,B,EQ,Less,Reverse,BGEZ,LUI,Regtoshamt,LOAlusrc,HIAlusrc,SYSCALL,J,ERET} <= 0;
         else if (EN) begin
 
             RegWrite <= RegWrite_in;
@@ -95,6 +97,8 @@ module IDtoEX_signal(
             Regtoshamt <= Regtoshamt_in;
             LOAlusrc <= LOAlusrc_in;
             HIAlusrc <= HIAlusrc_in;
+            J <= J_in;
+            ERET <= ERET_in;
             
         end
     end

@@ -47,6 +47,7 @@ module control_unit(
         output jr,
         output jmp,
         output jal,
+        output eret,
         // Data conflict.
         output r1_used,
         output r2_used,
@@ -225,6 +226,7 @@ module control_unit(
             BNE | SB | SH | SW ;
         assign hi_used = MFHI;
         assign lo_used = MFLO; 
+        assign eret = ERET;
 
         `define IALU 40
         always@(*) begin

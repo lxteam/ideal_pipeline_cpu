@@ -2,14 +2,15 @@
 module IF(
     input [31:0] Jaddr,
     input [31:0] PC_branch,
-    input JAL,input J, input JR, input Branch,
+    input [31:0] Iaddr,
+    input [31:0] EPC,
+    input J, input Branch, input Int, input ERET, 
     input clk,
     input PC_EN,
     input CLR,
 
     output [31:0] IR,
-    output [31:0] PC_out,
-    output bubble1
+    output [31:0] PC_out
 );
     parameter ADDR_WIDTH = 10;
     parameter DEPTH = 2**ADDR_WIDTH;
@@ -20,21 +21,24 @@ module IF(
     initial begin
         for (i = 0; i<DEPTH; i = i+1)
             rom[i] = 0;
-        $readmemh("/home/wc/w/benchmark.ht",rom);
+        $readmemh("/home/wc/w/int2.ht",rom);
         // for (i = 0; i < DEPTH; i = i+1)
         //     $display("line %d : %h\n", i, rom[i]);
 //            $readmemh("/home/wc/w/sort.ht",rom);
     end
-    assign bubble1 = JAL | J | JR | Branch;
     assign IR = rom[pc];
     always @(posedge clk) begin
         if (CLR)
             pc <= 0;
         else if (PC_EN) begin
-            if (Branch)
+            if (Int)
+                pc <= Iaddr;
+            else if (Branch)
                 pc <= PC_branch;
-            else if (JAL|JR|J)
+            else if (J)
                 pc <= Jaddr;
+            else if (ERET)
+                pc <= EPC;
             else
                 pc <= PC_out;
             
