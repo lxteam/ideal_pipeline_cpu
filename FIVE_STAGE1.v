@@ -47,7 +47,6 @@ module FIVE_STAGE1(
     DataConflict_ctrl DatC1(R1Used, R2Used, HiUsed, LoUsed, ID1.R1Num, ID1.R2Num, RegWrite_out2, WbRegNum_out2, RegWrite_out3, WbRegNum_out3, HIWrite_out2, LOWrite_out2, HIWrite_out3, LOWrite_out3, R2,R1,JAL_out2,PC_out2,MemtoReg_out3,ZDX_ID_MEM,JAL_out3,PC_out3,R2_out3,R1_out3,MemtoReg_out2,R1_EX,R2_EX,R1_MEM,R2_MEM,Hi_EX,Lo_EX,Hi_MEM,Lo_MEM,ZDX_EX,ZDX_MEM,LOAD_USE);
 
     INTM INTM1(clk, CLR, ir1, ir2, ir3, ERET_out2, PC_out2, IR_out2, PC_branch, J_out2, Branch, Int, Iaddr, EPC);
-    //todo: IF/ID J,ERET.
 endmodule // 
 
 
