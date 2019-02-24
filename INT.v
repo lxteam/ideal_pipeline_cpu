@@ -46,9 +46,18 @@ module INT_ARB(
     assign ir3_finish = eret & (cur_ir == `IR3);
 
     always@ (posedge clk) begin
+<<<<<<< HEAD
         if(CLR) begin
             {ir1_syn, ir2_syn, ir3_syn, cur_ir, Int, Iaddr} <= 0; 
             ie <= 1; 
+=======
+        if(clr) begin
+            ir1_syn <= 1'b0;
+            ir2_syn <= 1'b0;
+            ir3_syn <= 1'b0;
+            ie <= 1'b1;
+            cur_ir <= 3'b0;
+>>>>>>> 5ff410ad9382c5b1e2292e4bb63a5c084757b0de
         end
         else begin
             ir1_syn <= ir1_finish ? 1'b0 : (ir1_asyn ? 1'b1 : ir1_syn);
@@ -59,6 +68,7 @@ module INT_ARB(
             else if(ie)begin
                 if(ir1_syn)begin
                     ie <= 1'b0; 
+<<<<<<< HEAD
                     cur_ir <= `IR1;
                     Iaddr <= `IR1_ADDR;
                     Int <= 1;
@@ -74,6 +84,17 @@ module INT_ARB(
                     cur_ir <= `IR3;
                     Iaddr <= `IR3_ADDR;
                     Int <= 1;
+=======
+                    cur_ir <= IR1;
+                end
+                else if(ir2_syn)begin
+                    ie <= 1'b0; 
+                    cur_ir <= IR2;
+                end
+                else if(ir3_syn)begin
+                    ie <= 1'b0;
+                    cur_ir <= IR3;
+>>>>>>> 5ff410ad9382c5b1e2292e4bb63a5c084757b0de
                 end
             end
             else if (Int)
