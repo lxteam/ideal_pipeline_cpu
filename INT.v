@@ -45,6 +45,7 @@ module INT_ARB(
             ir2_syn <= 1'b0;
             ir3_syn <= 1'b0;
             ie <= 1'b1;
+            cur_ir <= 3'b0;
         end
         else begin
             ir1_syn <= ir1_finish ? 1'b0 ? (ir1_asyn ? 1'b1 : ir1_syn);
@@ -54,16 +55,16 @@ module INT_ARB(
                 ie <= 1'b1;
             else if(ie)begin
                 if(ir1_syn)begin
-                ie <= 1'b0; 
-                cur_ir <= IR1;
+                    ie <= 1'b0; 
+                    cur_ir <= IR1;
                 end
                 else if(ir2_syn)begin
-                ie <= 1'b0; 
-                cur_ir <= IR2;
+                    ie <= 1'b0; 
+                    cur_ir <= IR2;
                 end
                 else if(ir3_syn)begin
-                ie <= 1'b0; 
-                cur_ir <= IR3;
+                    ie <= 1'b0;
+                    cur_ir <= IR3;
                 end
             end
         end
