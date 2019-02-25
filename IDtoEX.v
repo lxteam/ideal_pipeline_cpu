@@ -13,11 +13,13 @@ module IDtoEX_reg(
     input [31:0] Extended_Imm_in, output reg [31:0] Extended_Imm,
     input [4:0] shamt_in, output reg[4:0] shamt,
     input [31:0] HI_in, output reg [31:0] HI,
-    input [31:0] LO_in, output reg [31:0] LO
+    input [31:0] LO_in, output reg [31:0] LO,
+    input [31:0] CP0data_in, output reg [31:0] CP0data,
+    input [4:0] CP0Num_in, output reg[4:0] CP0Num
 );
     always @(posedge clk) begin
         if (CLR | (bb&EN))
-            {IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO} <= 0;
+            {IR,PC,RD1,RD2,WbRegNum,Extended_Imm,shamt,HI,LO,CP0data,CP0Num} <= 0;
         else if (EN) begin
             IR <= IR_in;
             PC <= PC_in;
@@ -28,6 +30,8 @@ module IDtoEX_reg(
             shamt <= shamt_in;
             HI <= HI_in;
             LO <= LO_in;
+            CP0data <= CP0data_in;
+            CP0Num <= CP0Num_in;
         end
     end
 
@@ -46,6 +50,8 @@ module IDtoEX_signal(
     input MemtoReg_in, output reg MemtoReg,
     input JAL_in, output reg JAL,
     input SYSCALL_in, output reg SYSCALL,
+    input CP0Write_in, output reg CP0Write,
+    input CP0toReg_in, output reg CP0toReg,
     
     //MEM
     input MemWrite_in, output reg MemWrite,
@@ -80,6 +86,8 @@ module IDtoEX_signal(
             MemtoReg <= MemtoReg_in;
             JAL <= JAL_in;
             SYSCALL <= SYSCALL_in;
+            CP0Write <= CP0Write_in;
+            CP0toReg <= CP0toReg_in;
 
             MemWrite <= MemWrite_in;
             UnsignedExt_Mem <= UnsignedExt_Mem_in;

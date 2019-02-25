@@ -24,6 +24,12 @@ module ID(
     input HI_MEM,
     input LO_EX,
     input LO_MEM,
+    
+    input CP0_EX,
+    input [31:0] data_ex,
+    input CP0_MEM,
+    input [31:0] data_mem,
+    
     input [31:0] ZDX_EX,
     input [31:0] ZDX_MEM,
 
@@ -34,7 +40,11 @@ module ID(
     output [4:0] shamt,
     output [31:0] HI_1,
     output [31:0] LO_1,
-    output [31:0] jaddr
+    output [31:0] jaddr,
+    output [4:0] R1Num,
+    output [4:0] R2Num,
+    output [4:0] CP0Num,
+    output [32*32-1:0] reg_content
 );
     wire [5:0] OP = IR[31:26];
     wire [5:0] Func = IR[5:0];
@@ -42,8 +52,9 @@ module ID(
     wire [4:0] rt = IR[20:16];
     wire [4:0] rd = IR[15:11];
     wire [15:0] Imm = IR[15:0];
-    wire [4:0] R1Num = SYSCALL ? 2 : rs;
-    wire [4:0] R2Num = SYSCALL ? 4 : rt;
+    assign CP0Num = rd;
+    assign R1Num = SYSCALL ? 2 : rs;
+    assign R2Num = SYSCALL ? 4 : rt;
     reg [31:0] HI, LO;
     wire [31:0] A_I , B_I;
     assign WbRegNum = JAL ? 31 : (RegDst ? rd : rt);
@@ -68,9 +79,9 @@ module ID(
         else
             Extended_Imm = $signed(Imm);
     end
-    REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, A_I, B_I);
+    REGFILE reg1(WbData, clk, RegWrite,WbRegNum_in, R1Num, R2Num, A_I, B_I, reg_content);
     assign RD1 = (R1_EX) ? ZDX_EX : ((R1_MEM) ? ZDX_MEM : A_I);
-    assign RD2 = (R2_EX) ? ZDX_EX : ((R2_MEM) ? ZDX_MEM : B_I);
+    assign RD2 = CP0_EX ? data_ex : CP0_MEM ? data_mem : (R2_EX) ? ZDX_EX : ((R2_MEM) ? ZDX_MEM : B_I);
     assign HI_1  = (HI_EX) ? ZDX_EX : ((HI_MEM) ? ZDX_MEM :HI);
     assign LO_1 = (LO_EX) ? ZDX_EX : ((HI_MEM) ? ZDX_MEM :LO); 
 endmodule // 

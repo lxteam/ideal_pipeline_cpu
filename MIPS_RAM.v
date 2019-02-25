@@ -70,7 +70,8 @@ module MIPS_RAM(
     input CLR,
     input UnsignedExt_Mem,
 
-    output reg[31:0] data_out
+    output reg[31:0] data_out,
+    output reg [256*8-1:0] ram_content
 );
 parameter WIDTH = 8;
 parameter ADDR_SIZE = 8;
@@ -80,6 +81,10 @@ parameter DEPTH = 2**ADDR_SIZE;
     initial begin
         for (i2 = 0; i2<DEPTH-1; i2 = i2+1)
             mem[i2] = 0;
+    end
+    always @(*) begin
+        for (i2 = 0; i2<DEPTH-1; i2 = i2+1)
+            ram_content[i2*8+7 -: 8] = mem[i2];
     end
     wire [ADDR_SIZE-1:0] tmp_addr = addr[ADDR_SIZE-1:0];
     wire [ADDR_SIZE-1:0] real_addr = Byte ? tmp_addr : 

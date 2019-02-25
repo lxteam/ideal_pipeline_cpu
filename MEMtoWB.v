@@ -11,16 +11,13 @@ module MEMtoWB_reg(
     input [31:0] R2_in, output reg [31:0] R2,
     input [31:0] RD1_in, output reg [31:0] RD1,
     input [31:0] RD2_in, output reg [31:0] RD2,
-    input [4:0] WbRegNum_in, output reg [4:0] WbRegNum        
+    input [4:0] WbRegNum_in, output reg [4:0] WbRegNum,
+    input [31:0] CP0data_in, output reg [31:0] CP0data,
+    input [4:0] CP0Num_in, output reg[4:0] CP0Num
 );
     always @(posedge clk) begin
         if (CLR | (bb&EN))begin
-            {IR,PC} <= 0;
-            R1 <= 0;
-            R2 <= 0;
-            RD1 <= 0;
-            RD2 <= 0;
-            WbRegNum <= 0;
+            {IR,PC,R1,R2,RD1,RD2,WbRegNum,CP0data,CP0Num} <= 0;
         end
         else if (EN) begin
             IR <= IR_in;
@@ -30,6 +27,8 @@ module MEMtoWB_reg(
             RD1 <= RD1_in;
             RD2 <= RD2_in;
             WbRegNum <= WbRegNum_in;
+            CP0data <= CP0data_in;
+            CP0Num <= CP0Num_in;
         end
     end
 endmodule
@@ -44,7 +43,9 @@ module MEMtoWB_signal(
     input LOWrite_in, output reg LOWrite,
     input HIWrite_in, output reg HIWrite,
     input JAL_in, output reg JAL,
-    input SYSCALL_in, output reg SYSCALL
+    input SYSCALL_in, output reg SYSCALL,
+    input CP0Write_in, output reg CP0Write,
+    input CP0toReg_in, output reg CP0toReg
 );
     always @(posedge clk) begin
         if (CLR | (bb&EN))
@@ -55,6 +56,9 @@ module MEMtoWB_signal(
             HIWrite <= HIWrite_in;
             JAL <= JAL_in;
             SYSCALL <= SYSCALL_in;
+            CP0Write <= CP0Write_in;
+            CP0toReg <= CP0toReg_in;
+
         end
     end
 

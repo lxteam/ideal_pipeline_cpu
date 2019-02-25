@@ -12,8 +12,10 @@ module EX(
 	input [4:0] shamt,
     input HIAlu_Src,
     input LOAlu_Src,
+    // input CP0toReg,
     input [31:0] HI,
     input [31:0] LO,
+    // input [31:0] CP0data,
     input B,EQ,Less,Reverse,BGEZ,BGEZ_flagbit,//分支信号
 	
 	output [31:0] R1,

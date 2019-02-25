@@ -48,11 +48,14 @@ module control_unit(
         output jmp,
         output jal,
         output eret,
+        output cp0write,
+        output cp0toreg,
         // Data conflict.
         output r1_used,
         output r2_used,
         output hi_used,
-        output lo_used
+        output lo_used,
+        output cp0_used
     );
      // Normal
         wire[5:0] opt;
@@ -99,6 +102,8 @@ module control_unit(
         parameter SLT_FUNC = 6'b101010;
         parameter SLTU_FUNC = 6'b101011;
         parameter MFHI_FUNC = 6'b010000;
+        parameter MFC0_MF = 5'b00000;
+        parameter MTC0_MF = 5'b00100;
         
         parameter JR_FUNC = 6'b001000;
         parameter ERET_FUNC = 6'b011000;
@@ -130,6 +135,7 @@ module control_unit(
         parameter BNE_OPT = 6'b000101;
         parameter BLEZ_OPT = 6'b000110;
         parameter BGTZ_OPT = 6'b000111;
+        parameter CP0_OPT = 6'b010000;
         
 
         wire ADD = (SP & (func == ADD_FUNC));
@@ -180,7 +186,8 @@ module control_unit(
         wire BLEZ = ((opt == BLEZ_OPT) & (rt == 5'b00000));
         wire BGTZ = ((opt == BGTZ_OPT) & (rt == 5'b00000));
         wire ERET = ((opt == 6'b010000) & ir[25] & (ir[24:6] == 19'b0) & (func == ERET_FUNC));
-
+        wire MFC0 = ((opt == CP0_OPT) & (ir[25:21] == MFC0_MF));
+        wire MTC0 = ((opt == CP0_OPT) & (ir[25:21] == MTC0_MF));
 
         //wire NOP = (ir == {32{1'b0}});
         // instruction
@@ -193,7 +200,7 @@ module control_unit(
         // output
         assign syscall = SYSCALL;
         assign regdst = (((ADD | (ADDU | AND)) | ((SLL | SRA) | (SRL | SUB))) | (((OR | NOR) | (SLLV | 
-            SRLV)) | ((SRAV | SUBU) | (XOR | MULTU)))) | ((DIVU | MFLO) | (SLT | SLTU));
+            SRLV)) | ((SRAV | SUBU) | (XOR | MULTU)))) | ((DIVU | MFLO) | (SLT | SLTU)) ;
         assign alusrc = ((((ADDI | ADDIU) | (SLTI | SLTI)) | ((ANDI | ORI) | (XORI | LUI))) | (((LB | LH) | (LW | LBU)) | ((LHU | SB) | (SH | SW)))) | MFHI;
         assign lui = LUI;
         assign regtoshamt = SLLV | SRLV | SRAV;
@@ -202,7 +209,7 @@ module control_unit(
         assign memwrite = SB | SH | SW;
         assign byte = LB | LBU | SB;
         assign half = LH | LHU | SH;
-        assign regwrite = (JAL | regdst) | ((((ADDI | ADDIU) | (SLTI | SLTI)) | ((ANDI | ORI) | (XORI | LUI))) | ( ( (LB | LH) | (LW | LBU) ) | (LHU | MFHI))) ;
+        assign regwrite = (JAL | regdst) | ((((ADDI | ADDIU) | (SLTI | SLTI)) | ((ANDI | ORI) | (XORI | LUI))) | ( ( (LB | LH) | (LW | LBU) ) | (LHU | MFHI))) | MFC0 ;
         assign lowrite = MULTU | DIVU;
         assign hiwrite = lowrite;
         assign memtoreg = LB | LH | LW | LBU | LHU;
@@ -223,10 +230,14 @@ module control_unit(
             LB | LH | LW | LBU | LHU | SB | SH | SW;
         assign r2_used = ADD | ADDU | AND | SLL | SRA | SUB | OR | NOR | SLLV | 
             SRLV | SRAV | SUBU | XOR | MULTU | DIVU | SLT | SLTU | SYSCALL | BEQ | 
-            BNE | SB | SH | SW ;
+            BNE | SB | SH | SW | MFC0 | MTC0;
         assign hi_used = MFHI;
         assign lo_used = MFLO; 
+        assign cp0_used = MFC0;
+
         assign eret = ERET;
+        assign cp0write = MTC0;
+        assign cp0toreg = MFC0;
 
         `define IALU 40
         always@(*) begin
